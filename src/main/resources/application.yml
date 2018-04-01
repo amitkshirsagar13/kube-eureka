@@ -1,0 +1,45 @@
+spring.profiles.active: ${VPROFILE:native}
+info:
+  component: Spring Eureka Config Services
+server:
+  context-path: /${VCONTEXTPATH:registry}
+  display-name: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+  port: ${VPORT:8761}
+eureka:
+  instance:
+    instanceId: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+    statusPageUrlPath: ${server.context-path}${management.context-path}/info
+    healthCheckUrlPath: ${server.context-path}${management.context-path}/health
+    leaseRenewalIntervalInSeconds: 5
+  client:
+    region: default
+    serviceUrl:
+      defaultZone: http://${VEUREKAUSER:config}:${VEUREKAPASS:config}@${VEUREKAHOST:localhost.shinigami.io}:${VEUREKAPORT:8761}/registry/eureka
+    enabled: true
+    fetchRegistry: false
+  server:
+    renewalPercentThreshold: 0.0
+    enableSelfPreservation: true
+    waitTimeInMsWhenSyncEmpty: 0
+security:
+  basic:
+    enabled: true
+  user:
+    name: ${VEUREKAUSER:config}
+    password: ${VEUREKAPASS:config}
+management:
+  context-path: /admin
+  security:
+    enabled: true
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true
+      uri: config
+      server:
+        prefix: /config
+        native:
+          search-locations: classpath:spring-config-master/
+        git:
+          uri: ${VGITCONFIGURL:https://github.com/amitkshirsagar13/spring-config.git}

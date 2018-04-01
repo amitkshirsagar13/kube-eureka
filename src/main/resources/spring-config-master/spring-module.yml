@@ -1,0 +1,13 @@
+dynamic:
+  error: Fucked Error
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    enabled: true
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true

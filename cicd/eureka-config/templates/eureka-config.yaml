@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{.Values.application}}
+  namespace: {{.Values.branch}}
+  labels:
+    app: {{.Values.application}}
+    version: "{{.Values.application}}-{{.Values.commit}}"
+spec:
+  replicas: {{.Values.scale}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.application}}
+    spec:
+      containers:
+      - name: {{.Values.application}}
+        image: "amitkshirsagar13/{{.Values.application}}:{{.Values.commit}}"
+        ports:
+        - containerPort: 8761
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.application}}
+  namespace: {{.Values.branch}}
+spec:
+  ports:
+  - port: 8761
+    targetPort: 8761
+  selector:
+    app: {{.Values.application}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/tls-acme: "true"
+  name: "{{.Values.application}}.{{.Values.branch}}"
+  namespace: {{.Values.branch}}
+  labels:
+    version: "{{.Values.application}}-{{.Values.commit}}"
+spec:
+  tls:
+  - hosts:
+    - "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+  - secretName: {{.Values.branch}}
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+    - host: "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+      http:
+        paths:
+          - backend:
+              serviceName: {{.Values.application}}
+              servicePort: 8761
+            path: /

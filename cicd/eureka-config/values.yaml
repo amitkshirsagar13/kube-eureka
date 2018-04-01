@@ -1,0 +1,4 @@
+scale: 1
+application: kube-eureka
+branch: dev
+commit: latest
