@@ -16,6 +16,11 @@ spec:
       containers:
       - name: {{.Values.application}}
         image: "amitkshirsagar13/{{.Values.application}}:{{.Values.commit}}"
+        env:
+        - name: VCONFIGHOST
+          value: kube-eureka
+        - name: VCONFIGPORT
+          value: 80
         ports:
         - containerPort: 8761
         resources:
