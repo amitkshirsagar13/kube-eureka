@@ -2,6 +2,7 @@ def label = "worker-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
+  containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true), 
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
@@ -17,7 +18,7 @@ volumes: [
     def gitCommit = myRepo.GIT_COMMIT
     def gitBranch = myRepo.GIT_BRANCH
     def shortGitCommit = "${gitCommit[0..10]}"
-    def mvnTool = tool 'maven'
+    //def mvnTool = tool 'maven'
     def project = "basekube"
     def application = "kube-eureka"
     def dockerApp
@@ -25,7 +26,12 @@ volumes: [
        echo "Building Project...$gitBranch:$shortGitCommit"
 
        // execute maven
-       sh "${mvnTool}/bin/mvn -Dmaven.test.skip=true clean install"
+       //sh "${mvnTool}/bin/mvn -Dmaven.test.skip=true clean install"
+       container('maven') {
+	        stage('Build a Maven project') {
+	            sh 'mvn -Dmaven.test.skip=true clean install'
+	        }
+	    }
        
     }    
     stage('Create Docker images and Push') {
