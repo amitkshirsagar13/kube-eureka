@@ -1,8 +1,0 @@
-spring:
-  cloud:
-    config:
-      discovery: 
-        enabled: true
-        serviceId: config-server
-  user:
-    roles: ACTUATOR
