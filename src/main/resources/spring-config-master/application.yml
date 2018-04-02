@@ -1,5 +1,8 @@
 server:
   context-path: /
+security:
+  basic:
+    enabled: false
 management:
   context-path: /admin
   security:
@@ -12,9 +15,9 @@ eureka:
     healthCheckUrlPath: ${server.context-path}${management.context-path}/health
     leaseRenewalIntervalInSeconds: 5
     secure-port-enabled: true
-    secure-port: 443
+    secure-port: ${VSECUREPORT:${server.port}}
     non-secure-port-enabled: true
-    non-secure-port: 80
+    non-secure-port: ${VNONSECUREPORT:${server.port}}
     hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
   client:
     region: default

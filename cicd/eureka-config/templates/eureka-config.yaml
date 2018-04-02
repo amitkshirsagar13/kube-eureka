@@ -23,6 +23,10 @@ spec:
             value: "localhost"
           - name: VEUREKAPORT
             value: "8761"
+          - name: VSECUREPORT
+            value: "443"
+          - name: VNONSECUREPORT
+            value: "80"
         ports:
         - containerPort: 8761
 ---
