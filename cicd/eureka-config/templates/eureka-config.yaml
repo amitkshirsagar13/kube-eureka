@@ -17,6 +17,8 @@ spec:
       - name: {{.Values.application}}
         image: "amitkshirsagar13/{{.Values.application}}:{{.Values.commit}}"
         env:
+          - name: VHOSTNAME
+            value: "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
           - name: VEUREKAHOSTX
             value: localhost
           - name: VEUREKAPORTX

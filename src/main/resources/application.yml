@@ -11,10 +11,15 @@ eureka:
     statusPageUrlPath: ${server.context-path}${management.context-path}/info
     healthCheckUrlPath: ${server.context-path}${management.context-path}/health
     leaseRenewalIntervalInSeconds: 5
+    secure-port-enabled: true
+    secure-port: 443
+    non-secure-port-enabled: true
+    non-secure-port: 80
+    hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
   client:
     region: default
     serviceUrl:
-      defaultZone: http://${VEUREKAUSER:config}:${VEUREKAPASS:config}@${VEUREKAHOST:${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}}:${VEUREKAPORT:8761}/registry/eureka
+      defaultZone: http://${VEUREKAUSER:config}:${VEUREKAPASS:config}@${VEUREKAHOST:localhost.shinigami.io}:${VEUREKAPORT:8761}/registry/eureka
     enabled: true
     fetchRegistry: false
   server:
