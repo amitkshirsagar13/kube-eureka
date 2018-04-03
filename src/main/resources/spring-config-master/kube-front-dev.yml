@@ -1,0 +1,4 @@
+info:
+  component: Spring Kube Front Service - ${HOSTNAME}
+dynamic:
+  message: New Dev Fucker...dude... bang
