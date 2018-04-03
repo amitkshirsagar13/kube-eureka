@@ -8,7 +8,7 @@
 	<description>Server for running Config Eureka Server</description>
 
 	<groupId>io.kube</groupId>
-	<artifactId>cloud-startup</artifactId>
+	<artifactId>kube-eureka</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
