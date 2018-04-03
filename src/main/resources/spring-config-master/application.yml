@@ -14,11 +14,12 @@ eureka:
     statusPageUrlPath: ${server.context-path}${management.context-path}/info
     healthCheckUrlPath: ${server.context-path}${management.context-path}/health
     leaseRenewalIntervalInSeconds: 5
-    secure-port-enabled: true
-    secure-port: ${VSECUREPORT:${server.port}}
-    non-secure-port-enabled: true
-    non-secure-port: ${VNONSECUREPORT:${server.port}}
-    hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+    hostname: ${spring.application.name}
+  #  hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+  #  secure-port-enabled: true
+  #  secure-port: ${VSECUREPORT:${server.port}}
+  #  non-secure-port-enabled: true
+  #  non-secure-port: ${VNONSECUREPORT:${server.port}}
   client:
     region: default
     serviceUrl:
