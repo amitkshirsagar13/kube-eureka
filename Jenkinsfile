@@ -12,8 +12,8 @@ volumes: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
 ]) {
   node(label) {
-  
 	
+	def profile = "dev"
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
     def gitBranch = myRepo.GIT_BRANCH
@@ -24,12 +24,9 @@ volumes: [
     def dockerApp
     stage('Build Project') {
        echo "Building Project...$gitBranch:$shortGitCommit"
-
-       // execute maven
-       //sh "${mvnTool}/bin/mvn -Dmaven.test.skip=true clean install"
        container('maven') {
 	        stage('Build a Maven project') {
-	            sh 'mvn -Dmaven.test.skip=true clean install'
+	            sh "mvn -Dmaven.test.skip=true clean install"
 	        }
 	    }
        
@@ -43,7 +40,8 @@ volumes: [
           passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
           sh """
             docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-            docker build -t amitkshirsagar13/$application:latest .
+            docker build -t amitkshirsagar13/$application:$shortGitCommit -t amitkshirsagar13/$application:latest .
+            docker push amitkshirsagar13/$application:$shortGitCommit
             docker push amitkshirsagar13/$application:latest
             """
         }
@@ -51,7 +49,7 @@ volumes: [
     }
     stage('Run helm') {
       container('helm') {
-		sh "helm upgrade --install $application --namespace dev ./cicd/eureka-config/ --set branch=dev --set commit=latest --set application=$application"
+		sh "helm upgrade --install $application --namespace dev ./cicd/eureka-config/ --set profile=$profile --set branch=$gitBranch --set commit=$shortGitCommit --set application=$application"
       }
     }
   }

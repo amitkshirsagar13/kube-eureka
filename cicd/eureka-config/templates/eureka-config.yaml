@@ -16,19 +16,25 @@ spec:
       containers:
       - name: {{.Values.application}}
         image: "amitkshirsagar13/{{.Values.application}}:{{.Values.commit}}"
-        env:
-          - name: VHOSTNAME
-            value: "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
-          - name: VEUREKAHOST
-            value: "localhost"
-          - name: VEUREKAPORT
-            value: "8761"
-          - name: VSECUREPORT
-            value: "443"
-          - name: VNONSECUREPORT
-            value: "80"
         ports:
         - containerPort: 8761
+        env:
+        - name: spring.profiles.active
+          value: "{{.Values.profile}}"
+        - name: VHOSTNAME
+          value: "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+        - name: VSECUREPORT
+          value: "443"
+        - name: VNONSECUREPORT
+          value: "80"
+        - name: VEUREKAHOST
+          value: "localhost"
+        - name: VEUREKAPORT
+          value: "8761"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
 ---
 apiVersion: v1
 kind: Service
