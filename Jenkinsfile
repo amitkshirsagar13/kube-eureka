@@ -47,7 +47,7 @@ volumes: [
         }
       }
     }
-    stage('Run helm') {
+    stage('Deploy helm release') {
       container('helm') {
 		sh "helm upgrade --install $application --namespace dev ./cicd/eureka-config/ --set profile=$profile --set branch=$gitBranch --set commit=$shortGitCommit --set application=$application"
       }
