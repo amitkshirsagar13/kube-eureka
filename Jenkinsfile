@@ -49,7 +49,7 @@ volumes: [
     }
     stage('Deploy helm release') {
       container('helm') {
-		sh "helm upgrade --install $application --namespace dev ./cicd/kube-eureka/ --set profile=$profile --set branch=$gitBranch --set commit=$shortGitCommit --set application=$application"
+		sh "helm upgrade --install $application --namespace $gitBranch ./cicd/kube-eureka/ --set profile=$profile --set branch=$gitBranch --set commit=$shortGitCommit --set application=$application"
       }
     }
   }
