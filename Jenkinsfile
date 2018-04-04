@@ -10,7 +10,8 @@ podTemplate(label: label, containers: [
 ],
 volumes: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  persistentVolumeClaim(mountPath: '/home/jenkins/.mvnrepo', claimName: 'jenkins-mvn-local-repo', readOnly: false)
+  secretVolume(secretName: 'maven-settings', mountPath: '/root/.m2'),
+  persistentVolumeClaim(claimName: 'mavenrepo-volume-claim', mountPath: '/root/.m2nrepo')
 ]) {
   node(label) {
 	
