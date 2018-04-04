@@ -28,9 +28,7 @@ volumes: [
        echo "Building Project...$gitBranch:$shortGitCommit"
        container('maven') {
 	        stage('Build a Maven project') {
-		   withMaven(mavenLocalRepo: ".repository") {
-	             sh "mvn -Dmaven.test.skip=true clean install"
-		   }
+	           sh "mvn -Dmaven.test.skip=true clean install"
 	        }
 	    }
        
