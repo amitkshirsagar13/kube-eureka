@@ -11,15 +11,18 @@ management:
 eureka:
   instance:
     instanceId: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}:${spring.application.name}:${spring.application.instance_id:${server.port}}
-    statusPageUrlPath: ${server.context-path}${management.context-path}/info
+    statusPageUrlPath: https://${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}${server.context-path}${management.context-path}/info
     healthCheckUrlPath: ${server.context-path}${management.context-path}/health
+    home-page-url: https://${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}/${server.context-path}
+    status-page-url: https://${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}${server.context-path}${management.context-path}/info
     leaseRenewalIntervalInSeconds: 5
-  # hostname: ${spring.application.name}
-  #  hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
-  #  secure-port-enabled: true
-  #  secure-port: ${VSECUREPORT:${server.port}}
-  #  non-secure-port-enabled: true
-  #  non-secure-port: ${VNONSECUREPORT:${server.port}}
+    secure-virtual-host-name: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+    virtual-host-name: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+    hostname: ${VSERVICEHOST:${spring.application.name:${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}}}
+    secure-port-enabled: false
+    secure-port: ${VSECUREPORT:${server.port}}
+    non-secure-port-enabled: true
+    non-secure-port: ${VNONSECUREPORT:${server.port}}
   client:
     region: default
     serviceUrl:
