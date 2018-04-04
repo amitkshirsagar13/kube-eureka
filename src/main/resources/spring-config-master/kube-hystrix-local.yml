@@ -13,3 +13,4 @@ applications: KUBE-SERVER,KUBE-FRONT,ZUUL
 turbine:
   clusterNameExpression: new String("default")
   appConfig: ${applications}
+  combineHostPort: true
