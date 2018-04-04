@@ -16,8 +16,8 @@ eureka:
     home-page-url: https://${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}/${server.context-path}
     status-page-url: https://${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}${server.context-path}${management.context-path}/info
     leaseRenewalIntervalInSeconds: 5
-    secure-virtual-host-name: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
-    virtual-host-name: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+    secure-virtual-host-name: ${VSERVICEHOST:${spring.application.name:${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}}}
+    virtual-host-name: ${VSERVICEHOST:${spring.application.name:${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}}}
     hostname: ${VSERVICEHOST:${spring.application.name:${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}}}
     secure-port-enabled: false
     secure-port: ${VSECUREPORT:${server.port}}
