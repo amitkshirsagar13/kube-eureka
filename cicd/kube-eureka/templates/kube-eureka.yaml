@@ -13,6 +13,11 @@ spec:
       labels:
         app: {{.Values.application}}
     spec:
+      hostAliases:
+       - ip: 127.0.0.1
+         hostnames:
+         - {{.Values.application}}
+         - "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
       containers:
       - name: {{.Values.application}}
         image: "amitkshirsagar13/{{.Values.application}}:{{.Values.commit}}"
@@ -28,7 +33,7 @@ spec:
         - name: VNONSECUREPORT
           value: "80"
         - name: VEUREKAHOST
-          value: "localhost"
+          value: "{{.Values.application}}"
         - name: VEUREKAPORT
           value: "8761"
         resources:
@@ -42,9 +47,10 @@ metadata:
   name: {{.Values.application}}
   namespace: {{.Values.branch}}
 spec:
+  type: NodePort
   ports:
-  - port: 8761
-    targetPort: 8761
+    - port: 8761
+      nodePort: 30761
   selector:
     app: {{.Values.application}}
 ---
