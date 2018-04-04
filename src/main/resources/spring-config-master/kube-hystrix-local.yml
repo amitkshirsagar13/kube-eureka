@@ -1,0 +1,15 @@
+info:
+  component: Hystrix Turbine Dashboard - ${HOSTNAME:localhost.shinigami.io}
+server:
+  hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
+  port: 1234
+security:
+  basic:
+    enabled: true
+  user:
+    name: hystrix
+    password: password
+applications: KUBE-SERVER,KUBE-FRONT,ZUUL
+turbine:
+  clusterNameExpression: new String("default")
+  appConfig: ${applications}
