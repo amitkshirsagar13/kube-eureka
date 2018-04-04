@@ -2,3 +2,11 @@ info:
   component: Spring Kube Server Service - ${HOSTNAME}
 dynamic:
   message: New Local Fucker...dude... bang
+  
+spring:
+  data:
+    mongodb:
+      host: 192.168.99.100
+      port: 32017
+      repositories:
+        enabled: true

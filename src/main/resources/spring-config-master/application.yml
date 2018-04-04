@@ -14,7 +14,7 @@ eureka:
     statusPageUrlPath: ${server.context-path}${management.context-path}/info
     healthCheckUrlPath: ${server.context-path}${management.context-path}/health
     leaseRenewalIntervalInSeconds: 5
-    hostname: ${spring.application.name}
+  # hostname: ${spring.application.name}
   #  hostname: ${VHOSTNAME:${HOSTNAME:localhost.shinigami.io}}
   #  secure-port-enabled: true
   #  secure-port: ${VSECUREPORT:${server.port}}
