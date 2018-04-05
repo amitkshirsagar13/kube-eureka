@@ -2,6 +2,7 @@ def label = "worker-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
+  containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true), 
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
@@ -21,16 +22,6 @@ volumes: [
     def project = "basekube"
     def application = "kube-eureka"
     def dockerApp
-    def mvnContainer = docker.image('maven')
-    mvnContainer.inside('-v /home:/root/.m2') {
-      // Set up a shared Maven repo so we don't need to download all dependencies on every build.
-      writeFile file: 'settings.xml',
-         text: '<settings><localRepository>/m2repo</localRepository></settings>'
-      
-      // Build with maven settings.xml file that specs the local Maven repo.
-      sh 'mvn -B -s settings.xml clean install'
-   }
-	  
     stage('Build Project') {
        echo "Building Project...$gitBranch:$shortGitCommit"
        container('maven') {
