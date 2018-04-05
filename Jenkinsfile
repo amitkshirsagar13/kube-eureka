@@ -2,20 +2,17 @@ def label = "worker-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true), 
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
 
 ],
 volumes: [
-  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  secretVolume(secretName: 'maven-settings', mountPath: '/root/.m2'),
-  persistentVolumeClaim(claimName: 'mavenrepo-volume-claim', mountPath: '/root/.m2nrepo')
+  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
 ]) {
   node(label) {
 	
-	def profile = "dev"
+    def profile = "dev"
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
     def gitBranch = myRepo.GIT_BRANCH
@@ -24,6 +21,16 @@ volumes: [
     def project = "basekube"
     def application = "kube-eureka"
     def dockerApp
+    def mvnContainer = docker.image('maven')
+    mvnContainer.inside('-v /home:/root/.m2') {
+      // Set up a shared Maven repo so we don't need to download all dependencies on every build.
+      writeFile file: 'settings.xml',
+         text: '<settings><localRepository>/m2repo</localRepository></settings>'
+      
+      // Build with maven settings.xml file that specs the local Maven repo.
+      sh 'mvn -B -s settings.xml clean install'
+   }
+	  
     stage('Build Project') {
        echo "Building Project...$gitBranch:$shortGitCommit"
        container('maven') {
@@ -31,8 +38,7 @@ volumes: [
 	   sh "mvn -Dmaven.test.skip=true clean install"
 	 }
        }
-       
-    }    
+    } 
     stage('Create Docker images and Push') {
        echo "Project: $project | Application: $application | tag: $shortGitCommit"
       container('docker') {
