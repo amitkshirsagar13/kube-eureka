@@ -1,4 +1,4 @@
-def label = "worker-${UUID.randomUUID().toString()}"
+def label = "jenkins-jenkins-slave-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
@@ -13,7 +13,7 @@ volumes: [
 ]) {
   node(label) {
 	
-	def profile = "dev"
+    def profile = "dev"
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
     def gitBranch = myRepo.GIT_BRANCH
@@ -25,12 +25,11 @@ volumes: [
     stage('Build Project') {
        echo "Building Project...$gitBranch:$shortGitCommit"
        container('maven') {
-	        stage('Build a Maven project') {
-	            sh "mvn -Dmaven.test.skip=true clean install"
-	        }
-	    }
-       
-    }    
+	 stage('Build a Maven project') {
+	   sh "mvn -Dmaven.test.skip=true clean install"
+	 }
+       }
+    } 
     stage('Create Docker images and Push') {
        echo "Project: $project | Application: $application | tag: $shortGitCommit"
       container('docker') {
