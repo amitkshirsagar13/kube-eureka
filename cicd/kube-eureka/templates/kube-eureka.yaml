@@ -17,7 +17,7 @@ spec:
        - ip: 127.0.0.1
          hostnames:
          - {{.Values.application}}
-         - "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+         - "{{.Values.application}}.{{.Values.branch}}.k8m.io"
       containers:
       - name: {{.Values.application}}
         image: "amitkshirsagar13/{{.Values.application}}:{{.Values.commit}}"
@@ -27,7 +27,7 @@ spec:
         - name: spring.profiles.active
           value: "{{.Values.profile}}"
         - name: VHOSTNAME
-          value: "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+          value: "{{.Values.application}}.{{.Values.branch}}.k8m.io"
         - name: VSECUREPORT
           value: "443"
         - name: VNONSECUREPORT
@@ -68,13 +68,13 @@ metadata:
 spec:
   tls:
   - hosts:
-    - "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+    - "{{.Values.application}}.{{.Values.branch}}.k8m.io"
   - secretName: {{.Values.branch}}
   backend:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-    - host: "{{.Values.application}}.{{.Values.branch}}.shinigami.io"
+    - host: "{{.Values.application}}.{{.Values.branch}}.k8m.io"
       http:
         paths:
           - backend:
