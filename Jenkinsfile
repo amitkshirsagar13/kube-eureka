@@ -24,11 +24,22 @@ volumes: [
     def dockerApp
     stage('Build Project') {
        echo "Building Project...$gitBranch:$shortGitCommit"
-       container('maven') {
-	 stage('Build a Maven project') {
-	   sh "mvn -Dmaven.test.skip=true clean install"
-	 }
-       }
+       //container('maven') {
+	   //     stage('Build a Maven project') {
+	   //       sh "mvn -Dmaven.test.skip=true clean install"
+	   //     }
+	   //}
+	   withMaven(
+        // Maven installation declared in the Jenkins "Global Tool Configuration"
+        maven: 'maven',
+        // Maven settings.xml file defined with the Jenkins Config File Provider Plugin
+        
+        // settings.xml referencing the GitHub Artifactory repositories
+        //mavenSettingsConfig: '0e94d6c3-b431-434f-a201-7d7cda7180cb',
+        mavenLocalRepo: '.repository'
+        ) {
+        	sh "mvn -Dmaven.test.skip=true clean install"
+        }
     } 
     stage('Create Docker images and Push') {
        echo "Project: $project | Application: $application | tag: $shortGitCommit"
