@@ -1,15 +1,16 @@
-def label = "jenkins-jenkins-slave-${UUID.randomUUID().toString()}"
+def label = "jenkins-slave-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true), 
-  containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:latest', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
 
 ],
 volumes: [
-  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+	hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+	persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'jenkins-persistent-repository-storage-claim', readOnly: false)
 ]) {
   node(label) {
 	
@@ -24,22 +25,23 @@ volumes: [
     def dockerApp
     stage('Build Project') {
        echo "Building Project...$gitBranch:$shortGitCommit"
-       //container('maven') {
-	   //     stage('Build a Maven project') {
-	   //       sh "mvn -Dmaven.test.skip=true clean install"
-	   //     }
-	   //}
-	   withMaven(
+	container('maven') {
+	        stage('Build a Maven project') {
+	          sh "mvn -Dmaven.test.skip=true clean install"
+	        }
+	}
+	//   withMaven(
         // Maven installation declared in the Jenkins "Global Tool Configuration"
-        maven: 'maven',
+        // maven: 'maven',
         // Maven settings.xml file defined with the Jenkins Config File Provider Plugin
         
         // settings.xml referencing the GitHub Artifactory repositories
         //mavenSettingsConfig: '0e94d6c3-b431-434f-a201-7d7cda7180cb',
-        mavenLocalRepo: '.repository'
-        ) {
-        	sh "mvn -Dmaven.test.skip=true clean install"
-        }
+        //mavenLocalRepo: '.repository'
+        //) {
+        //	sh "mvn -Dmaven.test.skip=true clean install"
+        //}
+
     } 
     stage('Create Docker images and Push') {
        echo "Project: $project | Application: $application | tag: $shortGitCommit"
