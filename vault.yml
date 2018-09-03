@@ -1,0 +1,8 @@
+vault:
+  DEV:
+    config:
+      - PROJECTNAME: k8-cluster-200907
+      - VDOMAIN: k8scluster.io
+      - VNODE: k8m
+      - NAMESPACE: excel
+      - REPLICA_NUM: 1

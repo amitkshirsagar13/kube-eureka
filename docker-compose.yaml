@@ -1,0 +1,5 @@
+version: '3'
+services:
+  eureka-service:
+    build: .
+    image: amitkshirsagar13/eureka-service
